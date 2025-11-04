@@ -1,7 +1,14 @@
 import express from 'express';
 import { protect } from '../middlewares/auth.js'; // Bảo vệ bằng JWT
 import { isAdmin } from '../middlewares/role.js'; // Kiểm tra quyền Admin
-import { createCategory, createProduct, createStaff, getProducts } from '../controllers/adminController.js';
+import { 
+    createCategory, 
+    createProduct, 
+    createStaff, 
+    getProducts,
+    editProduct,      
+    removeProduct
+} from '../controllers/adminController.js';
 import upload from '../middlewares/upload.js';
 
 const router = express.Router();
@@ -28,6 +35,23 @@ router.post(
     isAdmin, 
     createProduct 
     // KHÔNG CÓ MIDDLEWARE MULTER
+);
+
+// Sửa sản phẩm
+router.put(
+  '/products/:id',
+  protect,
+  isAdmin,
+  upload.single('image'), // Nếu có upload ảnh mới
+  editProduct
+);
+
+// Xóa sản phẩm
+router.delete(
+  '/products/:id',
+  protect,
+  isAdmin,
+  removeProduct
 );
 
 router.get('/products', protect, isAdmin, getProducts);
