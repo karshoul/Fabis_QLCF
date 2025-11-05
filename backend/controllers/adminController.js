@@ -115,3 +115,79 @@ export const getProducts = async (req, res) => {
     const products = await Product.find({}).populate('category', 'name'); 
     res.json(products);
 };
+
+export const editProduct = async (req, res) => {
+    // Lấy ID sản phẩm từ URL params
+    const productId = req.params.id;
+    // Lấy các trường cần cập nhật từ request body
+    const { name, price, description, categoryId, is_active } = req.body;
+    
+    // Lấy đường dẫn ảnh nếu có file mới được upload (sử dụng Multer)
+    // Nếu req.file tồn tại, dùng ảnh mới; nếu không, giữ nguyên (sẽ không cập nhật trường image_url)
+    const new_image_url = req.file ? `/images/${req.file.filename}` : null;
+    
+    try {
+        // Tìm sản phẩm theo ID
+        const product = await Product.findById(productId);
+
+        if (!product) {
+            return res.status(404).json({ message: 'Không tìm thấy sản phẩm.' });
+        }
+
+        // Cập nhật các trường dữ liệu
+        // Chỉ cập nhật nếu trường đó được cung cấp trong req.body
+        if (name !== undefined) product.name = name;
+        if (price !== undefined) product.price = price;
+        if (description !== undefined) product.description = description;
+        if (categoryId !== undefined) product.category = categoryId;
+        if (is_active !== undefined) product.is_active = is_active;
+        
+        // Cập nhật URL ảnh nếu có ảnh mới
+        if (new_image_url) {
+            product.image_url = new_image_url;
+        }
+
+        // Lưu thay đổi vào database
+        const updatedProduct = await product.save();
+
+        // Trả về kết quả thành công
+        res.json({
+            message: 'Cập nhật sản phẩm thành công.',
+            product: updatedProduct
+        });
+        
+    } catch (error) {
+        console.error("LỖI CHI TIẾT KHI SỬA SẢN PHẨM:", error);
+        // Lỗi có thể là do ID không đúng định dạng (CastError) hoặc lỗi server khác
+        res.status(500).json({ 
+            message: 'Lỗi server khi cập nhật sản phẩm.',
+            error: error.message
+        });
+    }
+};
+
+export const removeProduct = async (req, res) => {
+    // Lấy ID sản phẩm từ URL params
+    const productId = req.params.id;
+
+    try {
+        // Tìm và xóa sản phẩm theo ID
+        // Note: Sử dụng findByIdAndDelete để vừa tìm vừa xóa
+        const product = await Product.findByIdAndDelete(productId);
+
+        if (!product) {
+            // Trường hợp không tìm thấy sản phẩm với ID này
+            return res.status(404).json({ message: 'Không tìm thấy sản phẩm để xóa.' });
+        }
+
+        // Trả về kết quả thành công
+        res.json({ message: 'Sản phẩm đã được xóa thành công.', _id: productId });
+        
+    } catch (error) {
+        console.error("LỖI CHI TIẾT KHI XÓA SẢN PHẨM:", error);
+        res.status(500).json({ 
+            message: 'Lỗi server khi xóa sản phẩm.',
+            error: error.message
+        });
+    }
+};
