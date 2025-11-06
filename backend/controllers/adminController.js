@@ -58,6 +58,16 @@ export const createStaff = async (req, res) => {
     }
 };
 
+export const getCategories = async (req, res) => {
+  try {
+    const categories = await Category.find({});
+    res.json(categories);
+  } catch (error) {
+    console.error("LỖI KHI LẤY DANH MỤC:", error);
+    res.status(500).json({ message: "Lỗi server khi lấy danh mục." });
+  }
+};
+
 export const createCategory = async (req, res) => {
     const { name, description } = req.body;
 
@@ -76,6 +86,38 @@ export const createCategory = async (req, res) => {
         console.error("LỖI CHI TIẾT KHI TẠO DANH MỤC:", error);
         res.status(500).json({ message: 'Lỗi server khi tạo danh mục.' });
     }
+};
+
+export const editCategory = async (req, res) => {
+  const categoryId = req.params.id;
+  const { name, description } = req.body;
+
+  try {
+    const category = await Category.findById(categoryId);
+    if (!category) return res.status(404).json({ message: "Không tìm thấy danh mục." });
+
+    if (name !== undefined) category.name = name;
+    if (description !== undefined) category.description = description;
+
+    const updatedCategory = await category.save();
+    res.json({ message: "Cập nhật danh mục thành công.", category: updatedCategory });
+  } catch (error) {
+    console.error("LỖI KHI SỬA DANH MỤC:", error);
+    res.status(500).json({ message: "Lỗi server khi cập nhật danh mục.", error: error.message });
+  }
+};
+
+export const removeCategory = async (req, res) => {
+  const categoryId = req.params.id;
+
+  try {
+    const category = await Category.findByIdAndDelete(categoryId);
+    if (!category) return res.status(404).json({ message: "Không tìm thấy danh mục để xóa." });
+    res.json({ message: "Danh mục đã được xóa thành công.", _id: categoryId });
+  } catch (error) {
+    console.error("LỖI KHI XÓA DANH MỤC:", error);
+    res.status(500).json({ message: "Lỗi server khi xóa danh mục.", error: error.message });
+  }
 };
 
 export const createProduct = async (req, res) => {
@@ -190,4 +232,20 @@ export const removeProduct = async (req, res) => {
             error: error.message
         });
     }
+};
+
+export const toggleProductStatus = async (req, res) => {
+  const productId = req.params.id;
+  try {
+    const product = await Product.findById(productId);
+    if (!product) return res.status(404).json({ message: 'Không tìm thấy sản phẩm.' });
+
+    product.is_active = !product.is_active;
+    await product.save();
+
+    res.json({ message: `Sản phẩm đã ${product.is_active ? 'bật' : 'tắt'} trạng thái thành công.`, product });
+  } catch (error) {
+    console.error("LỖI KHI CẬP NHẬT TRẠNG THÁI SẢN PHẨM:", error);
+    res.status(500).json({ message: 'Lỗi server khi cập nhật trạng thái sản phẩm.', error: error.message });
+  }
 };
