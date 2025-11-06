@@ -1,21 +1,19 @@
-import {Toaster, toast} from 'sonner';
-import {BrowserRouter, Routes, Route} from 'react-router';
-import { Homepage } from './pages/Homepage';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import DashboardPage from "./pages/DashboardPage";
+import { Toaster } from "sonner";
 
 function App() {
-
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route
-            path="/"
-            element={<Homepage/>}
-          />
+          {/* DashboardPage là trang chính */}
+          <Route path="/" element={<DashboardPage />} />
         </Routes>
       </BrowserRouter>
+      <Toaster />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
