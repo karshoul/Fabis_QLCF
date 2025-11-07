@@ -1,16 +1,34 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import { FaTachometerAlt, FaUsers, FaList, FaCoffee, FaChair, FaClipboardList } from "react-icons/fa";
 
 const Sidebar = () => {
+  const linkClass = ({ isActive }) =>
+    `flex items-center gap-2 px-3 py-2 rounded hover:bg-blue-100 transition-colors ${
+      isActive ? "bg-blue-200 font-semibold" : ""
+    }`;
+
   return (
-    <div className="w-64 bg-white h-screen shadow-lg p-5 flex flex-col gap-4">
-      <h2 className="text-xl font-bold mb-5">Admin Panel</h2>
-      <Link to="/" className="hover:text-blue-600">Dashboard</Link>
-      <Link to="/employees" className="hover:text-blue-600">Nhân viên</Link>
-      <Link to="/categories" className="hover:text-blue-600">Danh mục</Link>
-      <Link to="/products" className="hover:text-blue-600">Sản phẩm</Link>
-      <Link to="/tables" className="hover:text-blue-600">Bàn / Khu vực</Link>
-      <Link to="/orders" className="hover:text-blue-600">Đơn hàng</Link>
+    <div className="w-64 bg-white h-screen shadow-lg p-5 flex flex-col gap-4 overflow-y-auto">
+
+      <NavLink to="/" className={linkClass} end>
+        <FaTachometerAlt /> Dashboard
+      </NavLink>
+      <NavLink to="/employees" className={linkClass}>
+        <FaUsers /> Nhân viên
+      </NavLink>
+      <NavLink to="/categories" className={linkClass}>
+        <FaList /> Danh mục
+      </NavLink>
+      <NavLink to="/products" className={linkClass}>
+        <FaCoffee /> Sản phẩm
+      </NavLink>
+      <NavLink to="/tables" className={linkClass}>
+        <FaChair /> Bàn / Khu vực
+      </NavLink>
+      <NavLink to="/orders" className={linkClass}>
+        <FaClipboardList /> Đơn hàng
+      </NavLink>
     </div>
   );
 };
