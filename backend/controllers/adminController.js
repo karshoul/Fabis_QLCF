@@ -189,17 +189,13 @@ export const editProduct = async (req, res) => {
         
         // Cập nhật URL ảnh nếu có ảnh mới
         if (new_image_url) {
-            product.image_url = new_image_url;
-        }
-
-        // Lưu thay đổi vào database
-        const updatedProduct = await product.save();
-
-        // Trả về kết quả thành công
-        res.json({
-            message: 'Cập nhật sản phẩm thành công.',
-            product: updatedProduct
-        });
+    // [CẢI TIẾN]: Xóa ảnh cũ trước khi ghi đè
+    if (product.image_url && product.image_url !== '/images/default.jpg') {
+        const imagePath = path.join(path.resolve(), 'public', product.image_url);
+        await fs.unlink(imagePath).catch(err => console.error("Lỗi xóa file cũ:", err));
+    }
+    product.image_url = new_image_url;
+}
         
     } catch (error) {
         console.error("LỖI CHI TIẾT KHI SỬA SẢN PHẨM:", error);
@@ -225,6 +221,10 @@ export const removeProduct = async (req, res) => {
             return res.status(404).json({ message: 'Không tìm thấy sản phẩm để xóa.' });
         }
 
+        if (product.image_url && product.image_url !== '/images/default.jpg') {
+        const imagePath = path.join(path.resolve(), 'public', product.image_url);
+        await fs.unlink(imagePath).catch(err => console.error("Lỗi xóa file:", err));
+    }
         // Trả về kết quả thành công
         res.json({ message: 'Sản phẩm đã được xóa thành công.', _id: productId });
         

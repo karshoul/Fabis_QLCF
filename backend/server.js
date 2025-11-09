@@ -5,6 +5,7 @@ import dotenv from "dotenv"
 import {connectDB} from "./config/db.js"
 import authRoutes from './routes/auth.js';
 import adminRoutes from './routes/admin.js'
+import posRoutes from './routes/pos.js';
 import path from 'path';
 //import cors from 'cors'; // <-- THÊM DÒNG NÀY VÀO
 
@@ -27,6 +28,7 @@ app.use('/images', express.static(path.join(__dirname, '/public/images')));
 // 3. ĐỊNH TUYẾN (ROUTES)
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/pos', posRoutes);
 
 // 4. KẾT NỐI DATABASE (Có thể đặt trước hoặc sau Middlewares/Routes)
 connectDB(); 
