@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Sidebar from "../components/common/Sidebar";
 
 // Component gọn cho card thống kê
-// Component gọn cho card thống kê
 const StatCard = ({ title, value, color }) => {
   const borderColors = {
     blue: "border-t-blue-500",
