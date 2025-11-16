@@ -2,12 +2,28 @@ import React, { useEffect, useState } from "react";
 import Sidebar from "../components/common/Sidebar";
 
 // Component gọn cho card thống kê
-const StatCard = ({ title, value, color }) => (
-  <div className={`bg-white p-6 rounded-xl shadow hover:scale-[1.02] transition-transform border-t-4 border-${color}-500`}>
-    <h3 className="text-sm font-medium text-gray-500">{title}</h3>
-    <p className={`text-3xl font-bold mt-2 text-${color}-600`}>{value}</p>
-  </div>
-);
+const StatCard = ({ title, value, color }) => {
+  const borderColors = {
+    blue: "border-t-blue-500",
+    orange: "border-t-orange-500",
+    green: "border-t-green-500",
+    yellow: "border-t-yellow-500",
+  };
+
+  const textColors = {
+    blue: "text-blue-600",
+    orange: "text-orange-600",
+    green: "text-green-600",
+    yellow: "text-yellow-600",
+  };
+
+  return (
+    <div className={`bg-white p-6 rounded-xl shadow hover:scale-[1.02] transition-transform ${borderColors[color]}`}>
+      <h3 className="text-sm font-medium text-gray-500">{title}</h3>
+      <p className={`text-3xl font-bold mt-2 ${textColors[color]}`}>{value}</p>
+    </div>
+  );
+};
 
 // Placeholder biểu đồ
 const ChartPlaceholder = () => (

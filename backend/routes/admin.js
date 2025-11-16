@@ -58,4 +58,37 @@ router.get('/products', protect, isAdmin, getProducts);
 
 // ... Thêm routes QL Menu, QL Bàn...
 
-export default router;
+import {
+  getTablesWithProducts,
+  createTableWithProducts,
+  editTableWithProducts,
+  removeTableWithProducts,
+} from '../controllers/adminController.js';
+
+router.get(
+  '/tables',
+  protect,
+  isAdmin, 
+  getTablesWithProducts
+);
+
+router.post(
+  '/tables', 
+  protect, 
+  isAdmin, 
+  createTableWithProducts
+);
+
+router.put(
+  '/tables/:id', 
+  protect, 
+  isAdmin, 
+  editTableWithProducts
+);
+
+router.delete(
+  '/tables/:id', 
+  protect, 
+  isAdmin, 
+  removeTableWithProducts
+);
